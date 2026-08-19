@@ -1,0 +1,11 @@
+// EaglerForge Super Launch Mod
+ModAPI.addEventListener("update", () => {
+    // აქტიურდება "R" ღილაკზე დაჭერისას (Key Code 82 არის 'R')
+    if (ModAPI.isKeyDown(82)) {
+        // ზრდის მოთამაშის ვერტიკალურ სიჩქარეს (Y ღერძზე)
+        ModAPI.player.motionY = 1.5; 
+        
+        // ამატებს ეფექტს ჩატში
+        ModAPI.displayToChat({ msg: "§b🚀 იაააჰუუუ! სუპერ ნახტომი აქტიურია!" });
+    }
+});
