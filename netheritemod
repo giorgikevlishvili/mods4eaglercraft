@@ -1,27 +1,36 @@
 (() => {
-    const modTitle = "Netherite";
-    
-    // Simple placeholder textures for testing.
-    // We can replace these with proper Netherite textures after V1 works.
-    const ingotTexture =
-        "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAQSURBVFhH7cExAQAAAMKg9U9tCj+gYQAAAAAASUVORK5CYII=";
-
-    ModAPI.meta.title(modTitle);
-    ModAPI.meta.version("v1.0");
-    ModAPI.meta.description("Adds a Netherite Ingot and Netherite Sword.");
+    ModAPI.meta.title("Netherite");
+    ModAPI.meta.version("v2.0");
+    ModAPI.meta.description("Netherite test items for EaglerForge.");
     ModAPI.meta.credits("Custom EaglerForge mod");
 
     ModAPI.require("player");
 
-    // ==========================================
+    // =========================================================
+    // TEXTURES
+    // =========================================================
+    //
+    // These are tiny valid PNG textures used for testing.
+    // We'll replace them with proper 16x16 Netherite textures
+    // after the resource path is confirmed.
+    //
+
+    const texture =
+        "data:image/png;base64," +
+        "iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0" +
+        "AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJ" +
+        "cEhZcwAADsMAAA7DAcdvqGQAAAAQSURBVFhH7cExAQAA" +
+        "AMKg9U9tCj+gYQAAAAAASUVORK5CYII=";
+
+    // =========================================================
     // NETHERITE INGOT
-    // ==========================================
+    // =========================================================
 
     function NetheriteIngotItem() {
-        const creativeTab =
+
+        const tabs =
             ModAPI.reflect
-                .getClassById("net.minecraft.creativetab.CreativeTabs")
-                .staticVariables.tabMisc;
+                .getClassById("net.minecraft.creativetab.CreativeTabs");
 
         const itemClass =
             ModAPI.reflect.getClassById("net.minecraft.item.Item");
@@ -31,14 +40,17 @@
 
         const NetheriteIngot = function () {
             itemSuper(this);
-            this.$setCreativeTab(creativeTab);
+            this.$setCreativeTab(tabs.staticVariables.tabMisc);
         };
 
         ModAPI.reflect.prototypeStack(itemClass, NetheriteIngot);
 
         function register() {
+
             const item = new NetheriteIngot()
-                .$setUnlocalizedName(ModAPI.util.str("netherite_ingot"))
+                .$setUnlocalizedName(
+                    ModAPI.util.str("netherite_ingot")
+                )
                 .$setMaxStackSize(64);
 
             itemClass.staticMethods.registerItem.method(
@@ -54,20 +66,20 @@
 
         if (ModAPI.items) {
             return register();
-        } else {
-            ModAPI.addEventListener("bootstrap", register);
         }
+
+        ModAPI.addEventListener("bootstrap", register);
     }
 
-    // ==========================================
+    // =========================================================
     // NETHERITE SWORD
-    // ==========================================
+    // =========================================================
 
     function NetheriteSwordItem() {
-        const creativeTab =
+
+        const tabs =
             ModAPI.reflect
-                .getClassById("net.minecraft.creativetab.CreativeTabs")
-                .staticVariables.tabCombat;
+                .getClassById("net.minecraft.creativetab.CreativeTabs");
 
         const itemClass =
             ModAPI.reflect.getClassById("net.minecraft.item.Item");
@@ -77,14 +89,17 @@
 
         const NetheriteSword = function () {
             itemSuper(this);
-            this.$setCreativeTab(creativeTab);
+            this.$setCreativeTab(tabs.staticVariables.tabCombat);
         };
 
         ModAPI.reflect.prototypeStack(itemClass, NetheriteSword);
 
         function register() {
+
             const item = new NetheriteSword()
-                .$setUnlocalizedName(ModAPI.util.str("netherite_sword"))
+                .$setUnlocalizedName(
+                    ModAPI.util.str("netherite_sword")
+                )
                 .$setMaxStackSize(1)
                 .$setMaxDamage(2031);
 
@@ -101,19 +116,21 @@
 
         if (ModAPI.items) {
             return register();
-        } else {
-            ModAPI.addEventListener("bootstrap", register);
         }
+
+        ModAPI.addEventListener("bootstrap", register);
     }
 
     const netheriteIngot = NetheriteIngotItem();
     const netheriteSword = NetheriteSwordItem();
 
-    // ==========================================
-    // ASYNCSINK
-    // ==========================================
+    // =========================================================
+    // ASYNCSINK RESOURCES
+    // =========================================================
 
     ModAPI.addEventListener("lib:asyncsink", async () => {
+
+        console.log("Netherite: AsyncSink loaded.");
 
         ModAPI.addEventListener(
             "lib:asyncsink:registeritems",
@@ -128,10 +145,15 @@
                     netheriteSword,
                     ModAPI.util.str("netherite_sword")
                 );
+
+                console.log("Netherite: models registered.");
             }
         );
 
-        // Names
+        // =====================================================
+        // NAMES
+        // =====================================================
+
         AsyncSink.L10N.set(
             "item.netherite_ingot.name",
             "Netherite Ingot"
@@ -142,7 +164,10 @@
             "Netherite Sword"
         );
 
-        // Ingot model
+        // =====================================================
+        // INGOT MODEL
+        // =====================================================
+
         AsyncSink.setFile(
             "resourcepacks/AsyncSinkLib/assets/minecraft/models/item/netherite_ingot.json",
             JSON.stringify({
@@ -153,7 +178,10 @@
             })
         );
 
-        // Sword model
+        // =====================================================
+        // SWORD MODEL
+        // =====================================================
+
         AsyncSink.setFile(
             "resourcepacks/AsyncSinkLib/assets/minecraft/models/item/netherite_sword.json",
             JSON.stringify({
@@ -164,24 +192,27 @@
             })
         );
 
-        // Ingot texture
+        // =====================================================
+        // TEXTURES
+        // =====================================================
+
+        const ingotPNG =
+            await (await fetch(texture)).arrayBuffer();
+
+        const swordPNG =
+            await (await fetch(texture)).arrayBuffer();
+
         AsyncSink.setFile(
             "resourcepacks/AsyncSinkLib/assets/minecraft/textures/items/netherite_ingot.png",
-            await (
-                await fetch(ingotTexture)
-            ).arrayBuffer()
+            ingotPNG
         );
 
-        // Sword currently uses the same test texture.
-        // We'll replace it with a proper sword texture once
-        // the item registration is confirmed.
         AsyncSink.setFile(
             "resourcepacks/AsyncSinkLib/assets/minecraft/textures/items/netherite_sword.png",
-            await (
-                await fetch(ingotTexture)
-            ).arrayBuffer()
+            swordPNG
         );
 
-        console.log("Netherite: AsyncSink resources registered!");
+        console.log("Netherite: textures registered.");
     });
+
 })();
