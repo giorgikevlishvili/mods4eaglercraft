@@ -1,15 +1,18 @@
 ModAPI.meta.title("Netherite Test");
 ModAPI.meta.credits("Netherite test");
+ModAPI.meta.description("Testing Netherite custom items.");
 
 ModAPI.addEventListener("lib:libcustomitems:loaded", () => {
-    console.log("Netherite test: LibCustomItems loaded!");
+    console.log("================================");
+    console.log("NETHERITE TEST: LIB LOADED");
+    console.log("================================");
 
     LibCustomItems.registerItem({
-        tag: "netherite_test",
+        tag: "netherite:test",
         base: "diamond",
         name: "Netherite Test Ingot",
         qty: 1
     });
 
-    console.log("Netherite test: item registered!");
+    console.log("NETHERITE TEST: ITEM REGISTERED");
 });
